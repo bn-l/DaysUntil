@@ -36,6 +36,28 @@ clean:
     @if [ -d build ]; then trash build; fi
     @if [ -d .build ]; then trash .build; fi
 
+# Create DMG from release build
+dmg: app-release
+    #!/usr/bin/env bash
+    set -euo pipefail
+    VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" Info.plist)
+    DMG="build/DaysUntil_${VERSION}.dmg"
+    if [ -e "$DMG" ]; then trash "$DMG"; fi
+    hdiutil create "$DMG" -volname "DaysUntil" -srcfolder build/DaysUntil.app -ov -format UDZO
+    echo "$DMG"
+
+# Create GitHub release with DMG
+release: dmg
+    #!/usr/bin/env bash
+    set -euo pipefail
+    VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" Info.plist)
+    DMG="build/DaysUntil_${VERSION}.dmg"
+    SHA=$(shasum -a 256 "$DMG" | cut -d' ' -f1)
+    gh release create "v${VERSION}" "$DMG" --title "DaysUntil v${VERSION}" --notes "See assets to download and install."
+    echo ""
+    echo "SHA256: ${SHA}"
+    echo "Update homebrew-tap/Casks/days-until.rb with version \"${VERSION}\" and sha256 \"${SHA}\""
+
 # Print version from Info.plist
 version:
     @/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" Info.plist
