@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="assets/countdown.svg" alt="Menubar countdown icon" width="300">
+  <br>
+  <em>This is what it looks like on the menubar</em>
+</p>
+
 # DaysUntil
 
 A macOS menubar app that shows countdown badges for upcoming events. Each countdown gets its own menubar icon — a rounded square with the number of days remaining punched out as transparent digits.

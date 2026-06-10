@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" role="img" aria-label="Countdown from 9 to 0 with black numbers on a white rounded card">
+  <defs>
+    <style><![CDATA[
+      svg {
+        overflow: hidden;
+        background: transparent;
+      }
+
+      .card {
+        animation-name: drop;
+        animation-duration: 2s;
+        animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+        animation-fill-mode: forwards;
+        animation-iteration-count: 1;
+      }
+
+      /* slower stagger so each number hangs a bit before sliding out */
+      .n9 { animation-delay: 1.20s; }
+      .n8 { animation-delay: 3.90s; }
+      .n7 { animation-delay: 6.60s; }
+      .n6 { animation-delay: 9.30s; }
+      .n5 { animation-delay: 12.00s; }
+      .n4 { animation-delay: 14.70s; }
+      .n3 { animation-delay: 17.40s; }
+      .n2 { animation-delay: 20.10s; }
+      .n1 { animation-delay: 22.80s; }
+
+      .zero {
+        animation: zeroPulse 3.2s ease-in-out 25.10s infinite;
+      }
+
+      .square {
+        fill: #ffffff;
+        stroke: rgba(0,0,0,0.12);
+        stroke-width: 1.5;
+        filter: drop-shadow(0 10px 22px rgba(0,0,0,0.18));
+      }
+
+      .num {
+        fill: #000000;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-weight: 900;
+        font-size: 240px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+      }
+
+      @keyframes drop {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(360px);
+        }
+      }
+
+      @keyframes zeroPulse {
+        0%, 100% { opacity: 1; }
+        50%      { opacity: 0; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .card, .zero { animation: none !important; }
+      }
+    ]]></style>
+  </defs>
+
+  <g class="zero">
+    <rect class="square" x="16" y="16" width="288" height="288" rx="56"/>
+    <text class="num" x="160" y="176">0</text>
+  </g>
+
+  <g class="card n1">
+    <rect class="square" x="16" y="16" width="288" height="288" rx="56"/>
+    <text class="num" x="160" y="176">1</text>
+  </g>
+
+  <g class="card n2">
+    <rect class="square" x="16" y="16" width="288" height="288" rx="56"/>
+    <text class="num" x="160" y="176">2</text>
+  </g>
+
+  <g class="card n3">
+    <rect class="square" x="16" y="16" width="288" height="288" rx="56"/>
+    <text class="num" x="160" y="176">3</text>
+  </g>
+
+  <g class="card n4">
+    <rect class="square" x="16" y="16" width="288" height="288" rx="56"/>
+    <text class="num" x="160" y="176">4</text>
+  </g>
+
+  <g class="card n5">
+    <rect class="square" x="16" y="16" width="288" height="288" rx="56"/>
+    <text class="num" x="160" y="176">5</text>
+  </g>
+
+  <g class="card n6">
+    <rect class="square" x="16" y="16" width="288" height="288" rx="56"/>
+    <text class="num" x="160" y="176">6</text>
+  </g>
+
+  <g class="card n7">
+    <rect class="square" x="16" y="16" width="288" height="288" rx="56"/>
+    <text class="num" x="160" y="176">7</text>
+  </g>
+
+  <g class="card n8">
+    <rect class="square" x="16" y="16" width="288" height="288" rx="56"/>
+    <text class="num" x="160" y="176">8</text>
+  </g>
+
+  <g class="card n9">
+    <rect class="square" x="16" y="16" width="288" height="288" rx="56"/>
+    <text class="num" x="160" y="176">9</text>
+  </g>
+</svg>
