@@ -31,8 +31,7 @@
 
       .square {
         fill: #ffffff;
-        stroke: rgba(0,0,0,0.12);
-        stroke-width: 1.5;
+        stroke: none;
 
       }
 
