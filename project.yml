@@ -1,0 +1,35 @@
+name: DaysUntil
+options:
+  bundleIdPrefix: com.bn-l
+  deploymentTarget:
+    macOS: "15.0"
+  generateEmptyDirectories: false
+  createIntermediateGroups: true
+
+targets:
+  DaysUntil:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/DaysUntil
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bn-l.days-until
+        PRODUCT_NAME: DaysUntil
+        SWIFT_VERSION: "6.2"
+        MACOSX_DEPLOYMENT_TARGET: "15.0"
+        INFOPLIST_FILE: Info.plist
+        ENABLE_HARDENED_RUNTIME: YES
+        # The Xcode 16+ debug-dylib stub trips library validation under
+        # hardened runtime with a local signing identity.
+        ENABLE_DEBUG_DYLIB: NO
+        CODE_SIGN_IDENTITY: "Local Dev Signing"
+        SWIFT_STRICT_CONCURRENCY: complete
+
+schemes:
+  DaysUntil:
+    build:
+      targets:
+        DaysUntil: all
+    run:
+      executable: DaysUntil
