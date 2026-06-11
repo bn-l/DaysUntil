@@ -1,7 +1,5 @@
 <p align="center">
   <img src="assets/countdown.svg" alt="Menubar countdown icon" width="300">
-  <br>
-  <em>This is what it looks like on the menubar</em>
 </p>
 
 # DaysUntil
