@@ -59,6 +59,7 @@ final class StatusItemController: NSObject {
     @objc private nonisolated func dayChanged() {
         Task { @MainActor in
             logger.info("Day changed or woke from sleep — refreshing badges")
+            self.store.refreshDay()
             self.sync()
         }
     }

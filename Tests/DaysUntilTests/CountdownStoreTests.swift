@@ -1,4 +1,5 @@
 import Foundation
+import Observation
 import Testing
 @testable import DaysUntil
 
@@ -124,6 +125,52 @@ struct CountdownStoreTests {
 
         let relaunched = CountdownStore(fileURL: url, defaults: defaults)
         #expect(!relaunched.flamesEnabled)
+    }
+
+    @Test("Bug repro: popover day count goes stale across midnight — the day anchor SwiftUI reads must be observable and roll over")
+    func popoverDayCountRollover() async throws {
+        let url = freshFileURL()
+        let (defaults, cleanup) = try freshDefaults()
+        defer { cleanup() }
+        let store = CountdownStore(fileURL: url, defaults: defaults)
+        let countdown = try #require(store.countdowns.first)
+        let daysBefore = countdown.daysRemaining(asOf: store.today)
+        let tomorrow = try #require(Calendar.current.date(byAdding: .day, value: 1, to: store.today))
+
+        // The popover can only re-render at midnight if the day anchor it
+        // reads in its body fires observation when the day rolls over.
+        await confirmation("store.today observation fires on day rollover") { rolledOver in
+            withObservationTracking {
+                _ = store.today
+            } onChange: {
+                rolledOver()
+            }
+            store.refreshDay(now: tomorrow)
+        }
+
+        #expect(store.today == Calendar.current.startOfDay(for: tomorrow))
+        #expect(countdown.daysRemaining(asOf: store.today) == daysBefore - 1)
+    }
+
+    @Test("Wake without a rollover never touches the day anchor — no observation churn, no runaway re-renders")
+    func wakeWithoutRolloverIsInert() async throws {
+        let url = freshFileURL()
+        let (defaults, cleanup) = try freshDefaults()
+        defer { cleanup() }
+        let store = CountdownStore(fileURL: url, defaults: defaults)
+        let anchorBefore = store.today
+
+        await confirmation("same-day refresh fires no observation", expectedCount: 0) { fired in
+            withObservationTracking {
+                _ = store.today
+            } onChange: {
+                fired()
+            }
+            store.refreshDay(now: anchorBefore.addingTimeInterval(1))
+            store.refreshDay(now: anchorBefore.addingTimeInterval(60))
+        }
+
+        #expect(store.today == anchorBefore)
     }
 
     @Test("Default countdowns always land 5–20 days out with title and note from the canned lists")

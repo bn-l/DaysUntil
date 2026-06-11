@@ -19,6 +19,11 @@ final class CountdownStore {
         }
     }
 
+    /// Start of the current day. SwiftUI views must derive day counts from
+    /// this (via `daysRemaining(asOf:)`) instead of `Date.now` so their
+    /// bodies re-render when the day rolls over.
+    private(set) var today = Calendar.current.startOfDay(for: .now)
+
     private let fileURL: URL
     private let defaults: UserDefaults
 
@@ -60,6 +65,16 @@ final class CountdownStore {
 
     func countdown(id: UUID) -> Countdown? {
         countdowns.first { $0.id == id }
+    }
+
+    /// Re-anchors `today` after `NSCalendarDayChanged` or wake. Mutates only
+    /// on an actual day change, so repeated wake notifications cause no
+    /// observation churn.
+    func refreshDay(now: Date = .now) {
+        let newToday = Calendar.current.startOfDay(for: now)
+        guard newToday != today else { return }
+        logger.info("Day rolled over to \(newToday.formatted(date: .abbreviated, time: .omitted), privacy: .public)")
+        today = newToday
     }
 
     static let defaultTitles = [

@@ -38,6 +38,25 @@ struct CountdownTests {
         #expect(countdown.isToday == (offset == 0))
     }
 
+    @Test("Day count rolls over at midnight of the reference day, not 24h elapsed")
+    func rolloverAtMidnight() throws {
+        let startOfToday = calendar.startOfDay(for: .now)
+        let target = try #require(
+            calendar.date(byAdding: DateComponents(day: 12, hour: 12), to: startOfToday)
+        )
+        let lateTonight = try #require(
+            calendar.date(byAdding: DateComponents(hour: 23, minute: 59, second: 59), to: startOfToday)
+        )
+        let justPastMidnight = try #require(
+            calendar.date(byAdding: DateComponents(day: 1, second: 1), to: startOfToday)
+        )
+
+        let countdown = Countdown(targetDate: target)
+
+        #expect(countdown.daysRemaining(asOf: lateTonight) == 12)
+        #expect(countdown.daysRemaining(asOf: justPastMidnight) == 11)
+    }
+
     @Test("Codable round-trip preserves everything")
     func codableRoundTrip() throws {
         let original = Countdown(title: "Sp ace™", note: "line one\nline two", targetDate: .now)

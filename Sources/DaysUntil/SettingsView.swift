@@ -15,7 +15,7 @@ struct SettingsView: View {
             } else {
                 Form {
                     ForEach($store.countdowns) { $countdown in
-                        CountdownEditorSection(countdown: $countdown) {
+                        CountdownEditorSection(countdown: $countdown, today: store.today) {
                             store.remove(countdown.id)
                         }
                     }
@@ -95,6 +95,7 @@ private struct DateStepperField: NSViewRepresentable {
 /// per-keystroke store saves never write back into the active field editor.
 private struct CountdownEditorSection: View {
     @Binding var countdown: Countdown
+    let today: Date
     let onRemove: () -> Void
 
     @State private var title: String
@@ -103,8 +104,9 @@ private struct CountdownEditorSection: View {
 
     private static let calendarScale: CGFloat = 1.8
 
-    init(countdown: Binding<Countdown>, onRemove: @escaping () -> Void) {
+    init(countdown: Binding<Countdown>, today: Date, onRemove: @escaping () -> Void) {
         _countdown = countdown
+        self.today = today
         self.onRemove = onRemove
         _title = State(initialValue: countdown.wrappedValue.title)
         _note = State(initialValue: countdown.wrappedValue.note)
@@ -155,7 +157,7 @@ private struct CountdownEditorSection: View {
                     .frame(maxWidth: .infinity)
             }
             LabeledContent("Days") {
-                Text("\(countdown.daysRemaining)")
+                Text("\(countdown.daysRemaining(asOf: today))")
                     .monospacedDigit()
                     .foregroundStyle(.secondary)
             }

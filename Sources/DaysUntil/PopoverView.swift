@@ -7,6 +7,9 @@ struct PopoverView: View {
 
     var body: some View {
         if let countdown = store.countdown(id: countdownID) {
+            // Derived from store.today (observable), not Date.now — the
+            // popover body must re-render when the day rolls over.
+            let days = countdown.daysRemaining(asOf: store.today)
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(countdown.title.isEmpty ? "Untitled" : countdown.title)
@@ -20,10 +23,10 @@ struct PopoverView: View {
                 }
 
                 HStack(alignment: .firstTextBaseline, spacing: 7) {
-                    Text("\(abs(countdown.daysRemaining))")
+                    Text("\(abs(days))")
                         .font(.system(size: 34, weight: .bold, design: .rounded))
                         .monospacedDigit()
-                    Text(caption(for: countdown.daysRemaining))
+                    Text(caption(for: days))
                         .font(.title3)
                         .foregroundStyle(.secondary)
                 }
@@ -39,7 +42,7 @@ struct PopoverView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                if countdown.daysRemaining <= 0 {
+                if days <= 0 {
                     Divider()
                     Button("Remove Countdown", systemImage: "trash", role: .destructive) {
                         store.remove(countdown.id)
